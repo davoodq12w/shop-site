@@ -13,17 +13,26 @@ class ProductFeaturesInline(admin.StackedInline):
     extra = 0
 
 
+class CommentInline(admin.TabularInline):
+    model = Comment
+    extra = 0
+
+
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
     list_display = ['name', 'price', 'inventory', 'created', 'category',]
     list_filter = ['category', 'created', 'inventory']
     search_fields = ['name', 'price', 'created']
-    raw_id_fields = ['category']
     prepopulated_fields = {'slug': ['name']}
-    inlines = [ProductFeaturesInline, ImageInline]
+    inlines = [ProductFeaturesInline, ImageInline, CommentInline]
 
 
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
     list_display = ['name']
     prepopulated_fields = {'slug': ['name']}
+
+
+@admin.register(Comment)
+class CommentAdmin(admin.ModelAdmin):
+    list_display = ['author', 'product', 'text', 'rate', 'created', 'bad']

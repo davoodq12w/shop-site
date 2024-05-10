@@ -1,0 +1,128 @@
+{% extends 'parents/base_template.html' %}
+{% load static %}
+{% block title %}Cart Detail{% endblock %}
+{% load humanize %}
+{% block body %}
+    <div class="cart-container">
+        <h1 class="cart-title">سبد خرید</h1>
+        {% for item in cart %}
+            <div class="cart-product" data-item-id="{{ item.product.id }}">
+                <div class="cart-product-image-frame">
+                    <a href="{% url 'shop:product_details' product_slug=item.product.slug id=item.product.id %}" >
+                        <img src="{{ item.product.images.first.file.url }}" alt="{{ item.product.images.first.title }}"
+                        class="cart-product-image">
+                    </a>
+                </div>
+                <div class="cart-product-detail">
+                    <h2 class="cart-product-name">
+                        <a href="{% url 'shop:product_details' product_slug=item.product.slug id=item.product.id %}">
+                            {{ item.product.name }}
+                        </a>
+                    </h2>
+                    <p class="cart-product-price" >قیمت محصول: <span>{{ item.product.discount_price|intcomma }}</span></p>
+                    <p class="cart-product-total-price" >قیمت کل: <span id="product-total-price-{{ item.product.id }}">{{ item.total_price|intcomma}}</span></p>
+                    <p class="cart-product-description">{{ item.product.description }}</p>
+                    <div class="cart-actions">
+                        <a class="cart-add-product">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="cart-add-product-icon" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" >
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                            </svg>
+                        </a>
+                        <span class="cart-product-quantity" id="product-quantity-{{ item.product.id }}">{{ item.quantity }}</span>
+                        <a class="cart-minus-product">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="cart-minus-product-icon" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14" />
+                            </svg>
+
+                        </a>
+                        <a class="cart-remove-product">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="cart-remove-product-icon" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" >
+                            <path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
+                            </svg>
+
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <hr style="width: 95%;">
+        {% empty %}
+            <p class="not-any-product-in-cart">هنوز هیچ محصولی به سبد خرید اضافه نشده!</p>
+        {% endfor %}
+            <div class="cart-info">
+            <div class="cart-prices">
+                <p class="cart-total-price">قیمت محصولات: <span id="cart-total-price">{{ cart.get_total_price|intcomma }}</span></p>
+                <p class="cart-post-price">هزینه ی ارسال: <span id="cart-post-price">{{ cart.get_post_price|intcomma }}</span></p>
+                <a class="clear-cart" href="{% url 'cart:clear_cart' %}"> خالی کردن سبد خرید </a>
+            </div>
+            </div>
+        <div class="for-cart-button"></div>
+        <div class="cart-button">
+            <div class="cart-continue">
+            <p class="cart-final-price">مبلغ قابل پرداخت: <span id="cart-final-price">{{ cart.get_final_price|intcomma }}</span></p>
+            <p class="cart-product-count-in-cart">تعداد کل محصولات: <span id="cart-product-count-in-cart">{{ cart|length }}</span></p>
+            <a class="cart-continue-shopping" href="#">ادامه ی خرید</a>
+            </div>
+        </div>
+    </div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+    $(document).ready(function(){
+        $('.cart-add-product').click(function(){
+            updateQuantity($(this).closest(".cart-product").data('item-id'),'add');
+        });
+        $('.cart-minus-product').click(function(){
+            updateQuantity($(this).closest(".cart-product").data('item-id'),'minus');
+        });
+        $('.cart-remove-product').click(function(){
+            removeProduct($(this).closest(".cart-product").data('item-id'))
+        });
+        function updateQuantity(product_id, action){
+                $.ajax({
+                    type: "POST",
+                    url: "{% url 'cart:update_quantity' %}",
+                    data: {
+                        "product_id": product_id,
+                        "action": action,
+                        "csrfmiddlewaretoken": "{{ csrf_token }}",
+                    },
+                    success: function(data){
+                        $("#product-total-price-"+product_id).text(intcomma(data.product_total_price))
+                        $("#product-quantity-"+product_id).text(intcomma(data.product_quantity))
+                        $('.cart-product-count').text(data.length);
+                        $('.cart-price').text(intcomma(data.total_price));
+                        $('#cart-total-price').text(intcomma(data.total_price));
+                        $('#cart-product-count-in-cart').text(data.length);
+                        $('#cart-final-price').text(intcomma(data.final_price));
+                        $('#cart-post-price').text(intcomma(data.post_price));
+
+                    }
+                });
+        }
+        function removeProduct(product_id){
+                $.ajax({
+                    type: "POST",
+                    url: "{% url 'cart:remove_product' %}",
+                    data: {
+                        "product_id": product_id,
+                        "csrfmiddlewaretoken": "{{ csrf_token }}",
+                    },
+                    success: function(data){
+                        $('.cart-product-count').text(data.length);
+                        $('.cart-price').text(intcomma(data.total_price));
+                        $('#cart-total-price').text(intcomma(data.total_price));
+                        $('#cart-product-count-in-cart').text(data.length);
+                        $('#cart-final-price').text(intcomma(data.final_price));
+                        $('#cart-post-price').text(intcomma(data.post_price));
+                        $(`.cart-product[data-item-id=${product_id}]`).remove();
+                    }
+                });
+        }
+        {#chat GPT function #}
+        function intcomma(number){
+            return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        }
+        {#chat GPT function #}
+    });
+</script>
+
+{% endblock %}
