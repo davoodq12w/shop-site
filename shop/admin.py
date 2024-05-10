@@ -18,7 +18,6 @@ class ProductAdmin(admin.ModelAdmin):
     list_display = ['name', 'price', 'inventory', 'created', 'category',]
     list_filter = ['category', 'created', 'inventory']
     search_fields = ['name', 'price', 'created']
-    raw_id_fields = ['category']
     prepopulated_fields = {'slug': ['name']}
     inlines = [ProductFeaturesInline, ImageInline]
 
