@@ -1,0 +1,8 @@
+{% extends 'shop/profile.html' %}
+{% block profileContent %}
+    <form method="post" class="user-form">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="ارسال" class="send-ticket">
+    </form>
+{% endblock %}

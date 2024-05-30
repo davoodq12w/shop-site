@@ -1,0 +1,12 @@
+{% extends 'shop/profile.html' %}
+{% block profileContent %}
+    <form method="post" class="user-form">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="text" value="********" readonly style="margin-bottom: 10px" class="edit-user-password">
+        <a href="{% url 'account:password_change' %}">تغییر رمز</a>
+        <input type="submit" value="ذخیره" class="edit-user-submit">
+        <a href="{% url 'account:edit_user' %}" class="edit-user-cancel">انصراف</a>
+
+    </form>
+{% endblock %}

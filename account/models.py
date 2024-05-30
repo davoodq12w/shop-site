@@ -34,7 +34,6 @@ class ShopUser(PermissionsMixin, AbstractBaseUser):
     phone = models.CharField(max_length=11, unique=True)
     first_name = models.CharField(max_length=20)
     last_name = models.CharField(max_length=30)
-    address = models.TextField(null=True, blank=True)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     date_joined = jmodels.jDateTimeField(default=timezone.now)
@@ -63,3 +62,16 @@ class Address(models.Model):
                 f'شهر: {self.city} '
                 f'کد پستی: {self.postal_code} ')
 
+
+class Ticket(models.Model):
+
+    class Subject(models.TextChoices):
+        CRITICISM = 'C', 'criticism'
+        PROPOSAL = 'P', 'proposal'
+        REPORT = 'R', ' report'
+
+    subject = models.CharField(max_length=1, choices=Subject.choices)
+    message = models.TextField()
+    email = models.CharField(max_length=100)
+    phone = models.CharField(max_length=20)
+    name = models.CharField(max_length=200)
