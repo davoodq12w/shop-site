@@ -28,7 +28,7 @@ class Product(models.Model):
     description = models.TextField(max_length=2000)
     price = models.PositiveIntegerField()
     off = models.PositiveIntegerField()
-    discount_price = models.PositiveIntegerField()
+    discount_price = models.PositiveIntegerField(default=0)
     inventory = models.PositiveIntegerField()
     weight = models.PositiveIntegerField(default=0)
     created = jmodels.jDateTimeField(auto_now_add=True)

@@ -9,7 +9,6 @@ class AddressInline(admin.StackedInline):
     extra = 0
 
 
-
 @admin.register(ShopUser)
 class ShopUserAdmin(UserAdmin):
     ordering = ['phone']
@@ -20,14 +19,14 @@ class ShopUserAdmin(UserAdmin):
     inlines = [AddressInline]
     fieldsets = (
         (None, {'fields': ('phone', 'password',)}),
-        ('personal info', {'fields': ('first_name', 'last_name', 'address',)}),
+        ('personal info', {'fields': ('first_name', 'last_name',)}),
         ('permissions', {'fields': ('is_staff', 'is_superuser', 'is_active', 'groups', 'user_permissions')}),
         ('important dates', {'fields': ('date_joined', 'last_login')}),
     )
 
     add_fieldsets = (
         (None, {'fields': ('phone', 'password1', 'password2')}),
-        ('personal info', {'fields': ('first_name', 'last_name', 'address',)}),
+        ('personal info', {'fields': ('first_name', 'last_name',)}),
         ('permissions', {'fields': ('is_staff', 'is_superuser', 'is_active', 'groups', 'user_permissions')}),
         ('important dates', {'fields': ('date_joined', 'last_login')}),
     )

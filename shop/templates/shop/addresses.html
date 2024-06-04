@@ -1,0 +1,29 @@
+{% extends 'shop/profile.html' %}
+{% block profileContent %}
+    <a class="addresses-add-address" href="{% url 'account:add_address' %}">
+        <p>افزودن آدرس</p>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+        </svg>
+    </a>
+    <div class="profile-address">
+        {% for address in addresses %}
+            <div class="address">
+                <p>استان: <span>{{ address.province }}</span></p>
+                <p>شهر: <span>{{ address.city }}</span></p>
+                <p>کد پستی: <span>{{ address.postal_code }}</span></p>
+                <p>نام و نام خانوادگی دریافت کننده: <span>{{ address.receiver_name }}</span></p>
+                <p>شماره تلفن دریافت کننده: <span>{{ address.receiver_phone }}</span></p>
+            </div>
+            <div class="profile-exact-address">
+                <h3>آدرس دقیق: </h3>
+                <p>{{ address.exact_address }}</p>
+
+            </div>
+        {% empty %}
+            <div class="profile-no-address">
+                <p>هنوز ادرسی وجود ندارد</p>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}

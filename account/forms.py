@@ -57,11 +57,21 @@ class ShopUserCreationForm(UserCreationForm):
 
 
 class ShopUserChangeForm(UserChangeForm):
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['phone'].label = 'شماره تلفن'
+        self.fields['first_name'].label = 'نام'
+        self.fields['last_name'].label = 'نام خانوادگی'
+        self.fields['password'].help_text = None
+        self.fields['password'].label = 'رمز'
+
     class Meta(UserChangeForm.Meta):
         model = ShopUser
-        fields = ('phone', 'first_name', 'last_name', 'address',)
+        fields = ('phone', 'first_name', 'last_name',)
 
     def clean_phone(self):
+
         phone = self.cleaned_data.get('phone')
 
         if self.instance.pk:
@@ -85,7 +95,8 @@ class ShopUserChangeForm(UserChangeForm):
 
 class ShopLoginForm(forms.Form):
     phone = forms.CharField(widget=forms.TextInput(attrs={'class': 'login-phone'}), required=True, label='شماره تلفن')
-    password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'login-password'}), required=True, label='رمز')
+    password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'login-password'}), required=True,
+                               label='رمز')
 
     def clean_phone(self):
         phone = self.cleaned_data.get('phone')
@@ -165,4 +176,23 @@ class AddressForm(forms.ModelForm):
         if not phone.startswith('09'):
             forms.ValidationError('شماره تلفن باید با 09 شروع شود')
 
+        return phone
+
+
+class TicketForm(forms.Form):
+    SUBJECT_CHOICES = (
+        ('C', 'انتقاد'),
+        ('P', 'پیشنهاد'),
+        ('R', ' گزارش'),
+    )
+    subject = forms.ChoiceField(required=True, choices=SUBJECT_CHOICES, label='موضوع')
+    name = forms.CharField(required=True, max_length=100, label='نام')
+    phone = forms.CharField(required=True, max_length=11, min_length=11, label='شماره تلفن')
+    email = forms.CharField(required=True, max_length=250, label='ایمیل')
+    message = forms.CharField(required=True, widget=forms.Textarea(), label='متن تیکت')
+
+    def clean_phone(self):
+        phone = self.cleaned_data['phone']
+        if not phone.isnumeric():
+            raise forms.ValidationError('Invalid phone number')
         return phone
