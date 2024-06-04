@@ -6,6 +6,8 @@ from .models import *
 @receiver(pre_save, sender=Product)
 def price_update(sender, instance, **kwargs):
     instance.discount_price = instance.price - ((instance.price*instance.off)/100)
+    instance.discount_price = instance.price - instance.off
+
 
 
 @receiver(pre_save, sender=Comment)
