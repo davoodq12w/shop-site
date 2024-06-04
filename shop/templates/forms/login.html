@@ -1,0 +1,11 @@
+{% extends 'parents/base_template.html' %}
+{% block title %}Login{% endblock %}
+{% block body %}
+    <form method="post" class="user-form">
+    {% csrf_token %}
+        <h1>ورود به حساب کاربری</h1>
+        {{ form.as_p }}
+        <a href="{% url 'account:password_reset' %}" class="forgot-password">رمز خود را فراموش کرده ام !!!</a>
+        <input type="submit" value="ورود" class="user-submit">
+    </form>
+{% endblock %}

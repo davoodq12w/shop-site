@@ -1,0 +1,54 @@
+{% extends 'parents/base_template.html' %}
+{% load humanize %}
+{% block title %}Product List{% endblock %}
+{% block body %}
+    <h1 class="profile-user-name">{{ user.first_name }} {{ user.last_name }}</h1>
+    <div class="profile-body">
+        <div class="profile-options">
+            <ul>
+                <li class="user-phone"><a href="{% url 'account:profile' %}">حساب کاربری</a></li>
+                <li><a href="{% url 'account:edit_user' %}">ویرایش حساب کاربری</a></li>
+                <li><a href="{% url 'account:user_comments' %}">نظرهای داده شده</a></li>
+                <li><a href="{% url 'account:saved_products' %}">کالاهای ذخیره شده</a></li>
+                <li><a href="{% url 'account:ticket' %}"> فرستادن تیکت </a></li>
+                <li><a href="{% url 'account:addresses' %}">آدرس ها</a></li>
+                <li><a>درحال پردازش ها</a></li>
+                <li><a>ارسال شده ها</a></li>
+                <li><a>دریافت شده ها</a></li>
+                <li><a>لغو شده ها</a></li>
+            </ul>
+        </div>
+        <div class="profile-content">
+            {% block profileContent %}
+                <div class="personal-info">
+                    <p class="profile-first-name">نام: <span>{{ user.first_name }}</span></p>
+                    <p class="profile-last-name">نام خانوادگی: <span>{{ user.last_name }}</span></p>
+                    <p class="profile-phone">شماره تلفن: <span>{{ user.phone }}</span></p>
+                </div>
+                <h2 class="profile-address-title">آدرس</h2>
+                <div class="profile-address">
+                {% with user.addresses.first as address %}
+                    {% if address %}
+                    <div class="address">
+                        <p>استان: <span>{{ address.province }}</span></p>
+                        <p>شهر: <span>{{ address.city }}</span></p>
+                        <p>کد پستی: <span>{{ address.postal_code }}</span></p>
+                        <p>نام و نام خانوادگی دریافت کننده: <span>{{ address.receiver_name }}</span></p>
+                        <p>شماره تلفن دریافت کننده: <span>{{ address.receiver_phone }}</span></p>
+                    </div>
+                    <div class="profile-exact-address">
+                        <h3>آدرس دقیق: </h3>
+                        <p>{{ address.exact_address }}</p>
+                    </div>
+                    {% else %}
+                        <div class="profile-no-address">
+                            <p>هنوز هیچ آدرسی وجود ندارد! </p>
+                            <a href="{% url 'account:add_address' %}"> ایجاد آدرس </a>
+                        </div>
+                    {% endif %}
+                {% endwith %}
+                </div>
+            {% endblock %}
+        </div>
+    </div>
+{% endblock %}
