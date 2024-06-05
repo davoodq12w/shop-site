@@ -72,7 +72,7 @@ def profile(request):
         'saves': saves,
         'user': user,
     }
-    return render(request, 'shop/profile.html', context)
+    return render(request, 'account/profile.html', context)
 
 
 @login_required()
@@ -100,19 +100,19 @@ def ticket(request):
 @login_required
 def user_comments(request):
     comments = request.user.comments.all()
-    return render(request, 'shop/comments.html', {'comments': comments})
+    return render(request, 'account/comments.html', {'comments': comments})
 
 
 @login_required
 def saved_products(request):
     products = request.user.saves.all()
-    return render(request, 'shop/saved_products.html', {'products': products})
+    return render(request, 'account/saved_products.html', {'products': products})
 
 
 @login_required
 def user_addresses(request):
     addresses = request.user.addresses.all()
-    return render(request, 'shop/addresses.html', {'addresses': addresses})
+    return render(request, 'account/addresses.html', {'addresses': addresses})
 
 
 @login_required
