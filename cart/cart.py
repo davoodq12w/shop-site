@@ -55,7 +55,6 @@ class Cart:
             product_id = str(product.id)
             price.append(product.discount_price * self.cart[product_id]["quantity"])
         return sum(price)
-        # return sum(item['price']*item['quantity'] for item in self.cart.values())
 
     def get_final_price(self):
         price = self.get_total_price() + self.get_post_price()

@@ -133,7 +133,7 @@
             <p class="comment-date">{{ comment.created|jformat:'%Y/%m/%d - %H:%M' }}</p>
         </div>
         {% empty %}
-        <p style="text-align: center; width: 100%;">نظری ثبت نشده است</p>
+        <p style="text-align: center; width: 100%;" id="none-comment">نظری ثبت نشده است</p>
     {% endfor %}
     </div>
 </div>
@@ -247,6 +247,7 @@
                     url:'{% url 'shop:comment' %}',
                     data:{'product_id':'{{ product.id }}', 'rate':rate , 'comment':comment, 'csrfmiddlewaretoken': '{{ csrf_token }}'},
                     success:function (data){
+
                         comments.prepend(data);
                         $('.comment-input').val('');
                         resetStars();

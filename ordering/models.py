@@ -1,12 +1,20 @@
 from django.db import models
 from shop.models import Product
 from django_jalali.db import models as jmodels
+from account.models import ShopUser
 # Create your models here.
 
 
 class Order(models.Model):
-    first_name = models.CharField(max_length=50)
-    last_name = models.CharField(max_length=50)
+
+    class Status(models.TextChoices):
+        PROCESSING = ('Processing', ' در حال پردازش ')
+        SENDING = ('Sending', 'درحال ارسال')
+        RECEIVED = ('Received', 'دریافت شده')
+        REJECTED = ('Rejected', 'مرجوع')
+
+    buyer = models.ForeignKey(ShopUser, related_name='orders', on_delete=models.CASCADE)
+    name = models.CharField(max_length=50)
     address = models.TextField(max_length=250)
     postal_code = models.CharField(max_length=10)
     phone = models.CharField(max_length=11)
@@ -15,6 +23,8 @@ class Order(models.Model):
     created = jmodels.jDateTimeField(auto_now_add=True)
     updated = jmodels.jDateTimeField(auto_now=True)
     paid = models.BooleanField(default=False)
+    reference_id = models.CharField(null=True, blank=True)
+    status = models.CharField(choices=Status.choices)
 
     def __str__(self):
         return f"order by id {self.id}"

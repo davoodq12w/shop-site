@@ -116,7 +116,6 @@ def add_comment(request):
     product = Product.objects.get(id=product_id)
     text = request.POST.get('comment')
     rate = int(request.POST.get('rate'))
-    print(rate)
     comment = Comment.objects.create(product=product, author=request.user, text=text, rate=rate)
     comment.save()
     return render(request, 'ajax/comment_ajax.html', {'comment': comment})
