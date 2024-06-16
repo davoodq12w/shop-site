@@ -181,9 +181,9 @@ class AddressForm(forms.ModelForm):
 
 class TicketForm(forms.Form):
     SUBJECT_CHOICES = (
-        ('C', 'انتقاد'),
-        ('P', 'پیشنهاد'),
-        ('R', ' گزارش'),
+        ('Criticism', 'انتقاد'),
+        ('Proposal', 'پیشنهاد'),
+        ('Report', ' گزارش'),
     )
     subject = forms.ChoiceField(required=True, choices=SUBJECT_CHOICES, label='موضوع')
     name = forms.CharField(required=True, max_length=100, label='نام')

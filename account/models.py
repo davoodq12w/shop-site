@@ -53,9 +53,11 @@ class Address(models.Model):
     province = models.CharField(max_length=20)
     city = models.CharField(max_length=20)
     exact_address = models.TextField()
+    selected = models.BooleanField(default=False)
     postal_code = models.CharField(max_length=10, unique=True)
     receiver_name = models.CharField(max_length=50)
     receiver_phone = models.CharField(max_length=11)
+    created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return (f'استان: {self.province} '
@@ -66,11 +68,11 @@ class Address(models.Model):
 class Ticket(models.Model):
 
     class Subject(models.TextChoices):
-        CRITICISM = 'C', 'criticism'
-        PROPOSAL = 'P', 'proposal'
-        REPORT = 'R', ' report'
+        CRITICISM = 'Criticism', 'criticism'
+        PROPOSAL = 'Proposal', 'proposal'
+        REPORT = 'Report', ' report'
 
-    subject = models.CharField(max_length=1, choices=Subject.choices)
+    subject = models.CharField(choices=Subject.choices)
     message = models.TextField()
     email = models.CharField(max_length=100)
     phone = models.CharField(max_length=20)

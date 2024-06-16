@@ -1,0 +1,14 @@
+{% extends 'parents/base_template.html' %}
+{% block title %}Payment{% endblock %}
+{% block body %}
+    <h1>اطلاعات تراکنش</h1>
+    {% if success %}
+        <h3> تراکنش موفق</h3>
+        <p>شماره ی پیگیری: {{ RefID }}</p>
+        <p>شماره ی سفارش: {{ order_id }}</p>
+        <a href="{% url 'account:profile' %}">برگشت به خانه</a>
+    {% else %}
+        <h3>تراکنش ناموفق</h3>
+        <a href="{% url 'account:profile' %}">برگشت به خانه</a>
+    {% endif %}
+{% endblock %}

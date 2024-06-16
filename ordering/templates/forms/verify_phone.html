@@ -1,0 +1,14 @@
+{% extends 'parents/base_template.html' %}
+{% block title %} Verify Phone{% endblock %}
+{% block body %}
+
+    {% for message in messages %}
+        <p>{{ messages }}</p>
+    {% endfor %}
+
+    <form class="user-form" method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="ارسال کد" class="user-submit">
+    </form>
+{% endblock %}

@@ -642,6 +642,16 @@ svg{
             margin-right: 12.5%;
         }
     }
+    & select{
+        width: 80%;
+        font-family: vazir-medium;
+        margin: 0 auto;
+        border-radius: 5px;
+        text-align: center;
+        height: 30px;
+        background-color: rgba(5, 1, 1, 0.25);
+        border: 1px solid #06141B;
+    }
 }
 .profile-buttons{
     border-radius: 5px;
@@ -856,7 +866,7 @@ svg{
         position: fixed;
         top: 180px;
         width: 13%;
-        height: 420px;
+        height: 450px;
         border-radius: 8px;
         background-color: #9ba8ab;
         & ul{
@@ -1042,14 +1052,45 @@ svg{
     }
 }
 .profile-address{
-    width: 100%;
-    gap:20px;
     background-color: #9ba8ab;
     border-radius: 10px;
-    padding:20px 20px;
-    margin: 10px 0;
-    display: flex;
-    align-items: center;
+    padding: 10px 0;
+    margin-top: 10px;
+    & .address-actions{
+        width: 50%;
+        display: flex;
+        align-items: center;
+        height: 30px;
+        gap: 10px;
+        margin-right:2.5%;
+        & .delete-address{
+            display: flex;
+            align-items: center;
+            color: #ccd0cf;
+            background-color: #1d2c3b;
+            border-radius: 5px;
+            height: 30px;
+            width: 120px;
+            padding:0 10px;
+            justify-content: space-around;
+            &:hover{
+                background-color: #06141B;
+            }
+        }
+        & .address-set-default{
+            width: 200px;
+            background-color: #1d2c3b;
+            border-radius: 5px;
+            height: 30px;
+            line-height: 30px;
+            padding: 0 10px;
+            color: #ccd0cf;
+            text-align: center;
+            &:hover{
+                background-color: #06141B;
+            }
+        }
+    }
     & h2{
         width: 60%;
         border-left:3px solid #06141B;
@@ -1059,6 +1100,19 @@ svg{
         margin: 10px auto;
     }
     & .address{
+        width: 95%;
+        gap:20px;
+        display: flex;
+        align-items: center;
+        margin: 10px auto;
+    }
+    & hr{
+        border:2px solid #11212d;
+        border-radius: 5px;
+        width: 95%;
+
+    }
+    & .address-info{
         width:50%;
         background-color: #253745;
         border-radius: 10px;
@@ -1184,5 +1238,193 @@ svg{
         border:3px dashed #ccd0cf;
         color: #ccd0cf;
 
+    }
+}
+.order{
+    margin: 0 auto;
+    width: 90%;
+    display: flex;
+    gap: 20px;
+
+    & .order-details{
+        width: 70%;
+        background-color: #4A5C6A;
+        border-radius: 8px;
+        padding: 20px;
+        height: fit-content;
+        & .order-products{
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            padding: 5px;
+            & .order-product{
+            display: flex;
+            padding: 10px;
+            background-color: #9ba8ab;
+            border-radius: 7px;
+            width: 430px;
+                & img{
+                    width: 150px;
+                    height: 150px;
+                    border-radius: 5px;
+                    border: 2px solid #06141B;
+                }
+                & .order-product-detail{
+                    margin-right: 20px;
+                }
+            }
+        }
+        & .order-price-details{
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            width: 99%;
+            margin: 0 auto;
+            & p{
+                width: 25%;
+            }
+            & h2{
+                width: 50%;
+                text-align: center;
+            }
+        }
+    }
+    & .user-form{
+        margin-top: 0;
+    }
+}
+.orders-table{
+    width: 90%;
+    text-align: center;
+    background-color: #1d2c3b;
+    border-radius: 10px;
+    margin: 0 auto;
+    & .table-titles {
+        height: 30px;
+        & th{
+            border-radius:8px;
+            background-color: #ccd0cf;
+            color: #06141B;
+            margin: 5px;
+        }
+    }
+    & .order-contents{
+        height: 30px;
+        color: #ccd0cf;
+        & a{
+            color: #ccd0cf;
+            display: flex;
+            align-items: center;
+            width: fit-content;
+            margin: 0 auto;
+            gap: 10px;
+            &:hover{
+                color:#06141B ;
+
+            }
+        }
+        & .payment-status{
+            color: #ccd0cf;
+            display: flex;
+            align-items: center;
+            width: fit-content;
+            margin: 0 auto;
+            gap: 10px;
+            & .true{
+                color: green;
+            }
+            & .false{
+                color: darkred;
+            }
+        }
+    }
+
+}
+.order-detail-body{
+    background-color: #4A5C6A;
+    margin: 0 auto;
+    border-radius: 10px;
+    padding: 10px;
+    & .order-info {
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+
+        & .payment-status {
+            display: flex;
+            align-items: center;
+            width: fit-content;
+            gap: 10px;
+
+            & .true {
+                color: forestgreen;
+            }
+
+            & .false {
+                color: darkred;
+            }
+        }
+    }
+    & .order-details-address-users-info{
+        display: flex;
+        background-color: #1d2c3b;
+        border-radius: 8px;
+        padding: 20px;
+        gap: 20px;
+        & div{
+            background-color: #9ba8ab;
+            border-radius: 5px;
+            width: 50%;
+            padding: 20px;
+        }
+    }
+    & .order-detail-items{
+        background-color: #1d2c3b;
+        padding: 20px;
+        margin: 10px 0;
+        border-radius: 10px;
+        & .order-detail-item{
+            display: flex;
+            justify-content: space-between;
+            padding: 0 20px;
+            align-items: center;
+            margin: 10px 0;
+            background-color: #9ba8ab;
+            border-radius: 8px;
+            height: 80px;
+            & p{
+                width: 20%;
+                text-align: center;
+            }
+            & img{
+                border-radius: 5px;
+                width: 60px;
+            }
+        }
+    }
+    & .order-detail-prices{
+        background-color: #1d2c3b;
+        border-radius: 10px;
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        color: #ccd0cf;
+    }
+}
+
+.timer{
+    text-align: center;
+    width: 200px;
+    height: 50px;
+    margin: 0 auto;
+    color: #ccd0cf;
+    & .try-again{
+        display: block;
+        color: black;
+        background-color: #9ba8ab;
+        border-radius: 5px;
+        margin: 0 auto;
+        text-align: center;
+        width: 90px;
     }
 }

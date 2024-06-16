@@ -1,0 +1,41 @@
+{% extends 'parents/base_template.html' %}
+{% block title %} Verify Code{% endblock %}
+{% block body %}
+
+    {% for message in messages %}
+        <p>{{ messages }}</p>
+    {% endfor %}
+
+    <form class="user-form" method="post">
+        {% csrf_token %}
+        <input type="text" name="code" placeholder="کد پنج رقمی را وارد کنید" style="margin-bottom: 10px;">
+        <input type="submit" value="تایید کد" class="user-submit">
+    </form>
+    <div class="timer">
+        <p id="again"> <span id="timer"> 2:00 </span> تا تلاش دوباره </p>
+        <a href="{% url 'ordering:verify_phone' %}" hidden id="try-again">  تلاش دوباره  </a>
+    </div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+    $(document).ready(function(){
+        var minutes = 2;
+        var seconds = 0;
+        var timer = setInterval(function () {
+            if ( minutes == 0 & seconds == 0) {
+                clearInterval(timer)
+                $('#again').text('کد شما منقضی شد')
+                $('#try-again').toggleClass('try-again')
+            }else{
+                if (seconds == 0) {
+                    minutes--;
+                    seconds = 60;
+                }
+
+                seconds--;
+                $('#timer').text(minutes + ":" + seconds);
+            }
+
+        }, 1000);
+    })
+</script>
+{% endblock %}

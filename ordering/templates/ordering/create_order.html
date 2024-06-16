@@ -1,0 +1,86 @@
+{% extends 'parents/base_template.html' %}
+{% block title %} Create Order{% endblock %}
+{% load humanize %}
+{% block body %}
+
+    <div class="order">
+        <div class="order-details">
+            <div class="order-products">
+                {% for item in cart %}
+                    <div class="order-product">
+                        <img src="{{ item.product.images.first.file.url }}" alt="product-image">
+                        <div class="order-product-detail">
+                            <p>{{ item.quantity }} عدد {{ item.product.name }}</p>
+                            <p>قیمت هر واحد: {{ item.product.discount_price|intcomma }}</p>
+                            <p>قیمت کل: {{ item.total_price|intcomma }}</p>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <div class="order-price-details">
+                <p>هزینه ی پست: {{ cart.get_post_price|intcomma }}</p>
+                <p> جمع قیمت کالا ها: {{ cart.get_total_price|intcomma }}</p>
+                <h2>قیمت قابل پرداخت: {{ cart.get_final_price|intcomma }}</h2>
+            </div>
+        </div>
+
+        <form method="post" class="user-form">
+            <label for="address-select">آدرس مورد نظر خود را انتخاب کنید: </label>
+            <select name="addresses" class="create-order-addresses" id="address-select">
+                <option value="new"> ------ </option>
+                {% for address in request.user.addresses.all %}
+                    <option value="{{ address.id }}">
+                    {{ address.city }} : {{ address.receiver_name }}</option>
+                {% endfor %}
+            </select>
+            {% csrf_token %}
+            {{ form.as_p }}
+            <input type="submit" value="ثبت سفارش و پرداخت" class="user-submit">
+        </form>
+
+
+    </div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+    $(document).ready(function (){
+        $('.create-order-addresses').change(function(){
+            if($(this).val() === 'new'){
+
+                    $('.receiver-name').val('');
+
+                    $('.receiver-phone').val('');
+
+                    $('.receiver-province').val('');
+
+                    $('.receiver-city').val('');
+
+                    $('.receiver-postal-code').val('');
+
+                    $('.receiver-exact-address').val('');
+
+            }else{
+                var address_id = $(this).val()
+                $.ajax({
+                    url: '{% url 'ordering:load_address' %}',
+                    type: 'POST',
+                    data: {'address_id': address_id, 'csrfmiddlewaretoken': '{{ csrf_token }}'},
+                    success: function(data) {
+                        $('.receiver-name').val(data.name);
+
+                        $('.receiver-phone').val(data.phone);
+
+                        $('.receiver-province').val(data.province);
+
+                        $('.receiver-city').val(data.city);
+
+                        $('.receiver-postal-code').val(data.postal_code);
+
+                        $('.receiver-exact-address').val(data.exact_address);
+                    }
+                });
+            }
+        });
+    });
+</script>
+{% endblock %}

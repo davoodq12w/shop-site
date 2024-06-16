@@ -15,6 +15,10 @@ urlpatterns = [
     path('user_comments/', views.user_comments, name='user_comments'),
     path('saved_products/', views.saved_products, name='saved_products'),
     path('addresses/', views.user_addresses, name='addresses'),
+    path('delete_address/<int:address_id>/', views.delete_address, name='delete_address'),
+    path('select_address/', views.selection_address, name='select_address'),
+    path('user_orders', views.user_orders, name='user_orders'),
+    path('orders_status/<slug:status>/', views.orders_status, name='orders_status'),
 
     # =====================================
     # for password reset

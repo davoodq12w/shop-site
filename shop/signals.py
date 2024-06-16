@@ -5,12 +5,13 @@ from .models import *
 
 @receiver(pre_save, sender=Product)
 def price_update(sender, instance, **kwargs):
-    instance.discount_price = instance.price - ((instance.price*instance.off)/100)
-    instance.discount_price = instance.price - instance.off
+    discount_price = str(int(instance.price - ((instance.price*instance.off)/100)))
+    string_discount_price = ''.join(discount_price[:-3])
+    string_discount_price += '000'
+    instance.discount_price = int(string_discount_price)
 
 
-
-@receiver(pre_save, sender=Comment)
+@receiver(post_save, sender=Comment)
 def rate_update(sender, instance, **kwargs):
     rates = []
     for comment in instance.product.comments.all():

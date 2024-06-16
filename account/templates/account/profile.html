@@ -12,10 +12,11 @@
                 <li><a href="{% url 'account:saved_products' %}">کالاهای ذخیره شده</a></li>
                 <li><a href="{% url 'account:ticket' %}"> فرستادن تیکت </a></li>
                 <li><a href="{% url 'account:addresses' %}">آدرس ها</a></li>
-                <li><a>درحال پردازش ها</a></li>
-                <li><a>ارسال شده ها</a></li>
-                <li><a>دریافت شده ها</a></li>
-                <li><a>لغو شده ها</a></li>
+                <li><a href="{% url 'account:user_orders' %}"> سفارشات </a></li>
+                <li><a href="{% url 'account:orders_status' status='Processing' %}"> درحال پردازش </a></li>
+                <li><a href="{% url 'account:orders_status' status='Sending' %}"> درحال ارسال </a></li>
+                <li><a href="{% url 'account:orders_status' status='Received' %}"> دریافت شده </a></li>
+                <li><a href="{% url 'account:orders_status' status='rejected' %}"> مرجوع ها </a></li>
             </ul>
         </div>
         <div class="profile-content">
@@ -27,18 +28,19 @@
                 </div>
                 <h2 class="profile-address-title">آدرس</h2>
                 <div class="profile-address">
-                {% with user.addresses.first as address %}
                     {% if address %}
                     <div class="address">
-                        <p>استان: <span>{{ address.province }}</span></p>
-                        <p>شهر: <span>{{ address.city }}</span></p>
-                        <p>کد پستی: <span>{{ address.postal_code }}</span></p>
-                        <p>نام و نام خانوادگی دریافت کننده: <span>{{ address.receiver_name }}</span></p>
-                        <p>شماره تلفن دریافت کننده: <span>{{ address.receiver_phone }}</span></p>
-                    </div>
-                    <div class="profile-exact-address">
-                        <h3>آدرس دقیق: </h3>
-                        <p>{{ address.exact_address }}</p>
+                        <div class="address-info">
+                            <p>استان: <span>{{ address.province }}</span></p>
+                            <p>شهر: <span>{{ address.city }}</span></p>
+                            <p>کد پستی: <span>{{ address.postal_code }}</span></p>
+                            <p>نام و نام خانوادگی دریافت کننده: <span>{{ address.receiver_name }}</span></p>
+                            <p>شماره تلفن دریافت کننده: <span>{{ address.receiver_phone }}</span></p>
+                        </div>
+                        <div class="profile-exact-address">
+                            <h3>آدرس دقیق: </h3>
+                            <p>{{ address.exact_address }}</p>
+                        </div>
                     </div>
                     {% else %}
                         <div class="profile-no-address">
@@ -46,7 +48,6 @@
                             <a href="{% url 'account:add_address' %}"> ایجاد آدرس </a>
                         </div>
                     {% endif %}
-                {% endwith %}
                 </div>
             {% endblock %}
         </div>
