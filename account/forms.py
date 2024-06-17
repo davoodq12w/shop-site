@@ -10,7 +10,7 @@ class ShopUserCreationForm(UserCreationForm):
 
         self.fields['password1'].help_text = None
         self.fields['password2'].help_text = None
-        self.fields['phone'].label = 'شماره تلفن'
+        # self.fields['phone'].label = 'شماره تلفن'
         self.fields['first_name'].label = 'نام'
         self.fields['last_name'].label = 'نام خانوادگی'
         self.fields['password1'].label = 'رمز'
@@ -19,36 +19,36 @@ class ShopUserCreationForm(UserCreationForm):
     class Meta(UserCreationForm.Meta):
 
         model = ShopUser
-        fields = ('phone', 'first_name', 'last_name', 'password1', 'password2')
+        fields = ('first_name', 'last_name', 'password1', 'password2')
         widgets = {
-            'phone': forms.TextInput(attrs={'class': 'phone-input', }),
+            # 'phone': forms.TextInput(attrs={'class': 'phone-input', }),
             'first_name': forms.TextInput(attrs={'class': 'first-name-input', }),
             'last_name': forms.TextInput(attrs={'class': 'last-name-input', }),
             'password1': forms.PasswordInput(attrs={'class': 'password1-input', }),
             'password2': forms.PasswordInput(attrs={'class': 'password2-input', }),
         }
-        required_fields = ['phone', 'first_name', 'last_name', 'password1', 'password2']
+        required_fields = ['first_name', 'last_name', 'password1', 'password2']
 
-    def clean_phone(self):
-        phone = self.cleaned_data.get('phone')
-
-        if self.instance.pk:
-            if ShopUser.objects.filter(phone=phone).exclude(pk=self.instance.pk).exists():
-                raise forms.ValidationError('شماره تلفن درحال حاضر موجود میباشد')
-        else:
-            if ShopUser.objects.filter(phone=phone).exists():
-                raise forms.ValidationError('شماره تلفن درحال حاضر موجود میباشد')
-
-        if not phone.isdigit():
-            raise forms.ValidationError('شماره تلفن باید فقط عدد باشد')
-
-        if len(phone) != 11:
-            raise forms.ValidationError('تعداد ارقام باید 11 رقم باشد')
-
-        if not phone.startswith('09'):
-            forms.ValidationError('شماره تلفن باید با 09 شروع شود')
-
-        return phone
+    # def clean_phone(self):
+    #     phone = self.cleaned_data.get('phone')
+    #
+    #     if self.instance.pk:
+    #         if ShopUser.objects.filter(phone=phone).exclude(pk=self.instance.pk).exists():
+    #             raise forms.ValidationError('شماره تلفن درحال حاضر موجود میباشد')
+    #     else:
+    #         if ShopUser.objects.filter(phone=phone).exists():
+    #             raise forms.ValidationError('شماره تلفن درحال حاضر موجود میباشد')
+    #
+    #     if not phone.isdigit():
+    #         raise forms.ValidationError('شماره تلفن باید فقط عدد باشد')
+    #
+    #     if len(phone) != 11:
+    #         raise forms.ValidationError('تعداد ارقام باید 11 رقم باشد')
+    #
+    #     if not phone.startswith('09'):
+    #         forms.ValidationError('شماره تلفن باید با 09 شروع شود')
+    #
+    #     return phone
 
     def clean_password2(self):
         if self.cleaned_data['password1'] != self.cleaned_data['password2']:
@@ -195,4 +195,26 @@ class TicketForm(forms.Form):
         phone = self.cleaned_data['phone']
         if not phone.isnumeric():
             raise forms.ValidationError('Invalid phone number')
+        return phone
+
+
+class VerifyPhoneForm(forms.Form):
+    phone = forms.CharField(required=True, max_length=11, label='شماره تلفن')
+
+    def clean_phone(self):
+
+        phone = self.cleaned_data.get('phone')
+
+        if ShopUser.objects.filter(phone=phone).exists():
+            raise forms.ValidationError("شماره تلفن از قبل وجود دارد")
+
+        if not phone.isdigit():
+            raise forms.ValidationError('شماره تلفن باید فقط عدد باشد')
+
+        if len(phone) != 11:
+            raise forms.ValidationError('تعداد ارقام باید 11 رقم باشد')
+
+        if not phone.startswith('09'):
+            forms.ValidationError('شماره تلفن باید با 09 شروع شود')
+
         return phone

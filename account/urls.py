@@ -19,7 +19,8 @@ urlpatterns = [
     path('select_address/', views.selection_address, name='select_address'),
     path('user_orders', views.user_orders, name='user_orders'),
     path('orders_status/<slug:status>/', views.orders_status, name='orders_status'),
-
+    path('verify_phone/', views.verify_phone, name='verify_phone'),
+    path('verify_code/', views.verify_code, name='verify_code'),
     # =====================================
     # for password reset
     # =====================================

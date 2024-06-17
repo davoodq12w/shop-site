@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'django_resized',
     'django_cleanup',
     'django_jalali',
+    'django_social_share',
 
 ]
 

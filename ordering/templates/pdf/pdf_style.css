@@ -1,0 +1,87 @@
+@font-face {
+    font-family: "vazir-medium";
+    src: url('shop/static/fonts/vazir-font-v16.1.0/Farsi-Digits-Without-Latin/Vazir-Medium-FD-WOL.woff') format("woff");
+}
+body{
+    font-family: "vazir-medium", serif;
+}
+a{
+    text-decoration: none;
+}
+svg{
+    width: 20px;
+}
+*{
+    box-sizing: border-box;
+}
+
+.order-detail-body{
+    background-color: #4A5C6A;
+    border-radius: 10px;
+    padding: 10px;
+    width: 100%;
+    & .order-info {
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+
+        & .payment-status {
+            display: flex;
+            align-items: center;
+            width: fit-content;
+            gap: 10px;
+        }
+    }
+    & .order-details-address-users-info{
+        display: flex;
+        background-color: #1d2c3b;
+        border-radius: 8px;
+        padding: 20px;
+        gap: 20px;
+        & div{
+            background-color: #9ba8ab;
+            border-radius: 5px;
+            width: 250px;
+            padding: 20px;
+            margin: 0 10px;
+        }
+    }
+    & .order-detail-items{
+        background-color: #1d2c3b;
+        padding: 20px;
+        margin: 10px 0;
+        border-radius: 10px;
+        & .order-detail-item{
+            display: flex;
+            justify-content: space-between;
+            padding: 0 20px;
+            align-items: center;
+            margin: 10px 0;
+            background-color: #9ba8ab;
+            border-radius: 8px;
+            height: 50px;
+            font-size: 13px;
+            & p{
+                width: 20%;
+                text-align: center;
+            }
+        }
+    }
+    & .order-detail-prices{
+        background-color: #1d2c3b;
+        border-radius: 10px;
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        color: #ccd0cf;
+        & a{
+            color: black;
+            background-color: #ccd0cf;
+            border-radius: 5px;
+            padding: 5px 10px;
+            &:hover{
+                background-color: #4A5C6A;
+            }
+        }
+    }
+}

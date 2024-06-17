@@ -2,14 +2,14 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 import random
-from .models import OrderItem
+from .models import *
 from .forms import *
 from cart.kavenegar.send_sms_to_user import *
 from account.models import ShopUser
 from django.contrib.auth import login
 from cart.cart import Cart
 from django.http import JsonResponse
-
+from .renderers import render_to_pdf
 from django.utils import timezone
 from django.utils.dateparse import parse_datetime
 
@@ -64,16 +64,17 @@ def verify_code(request):
                         user.set_password(password)
                         user.save()
 
-                message = (f'کاربر عزیز به سایت فروشگاهی خوش آمدید'
-                           f'جزییات حساب کاربری شما:'
-                           f'{phone}شماره تلفن : '
-                           f'{password}رمز شما: ')
-                # sms(phone, message)
-                print(message)
-                login(request, user)
-                del request.session['phone']
-                del request.session['verification_code']
-                return redirect('ordering:create_order')
+                        message = (f'کاربر عزیز به سایت فروشگاهی خوش آمدید'
+                                   f'جزییات حساب کاربری شما:'
+                                   f'{phone}شماره تلفن : '
+                                   f'{password}رمز شما: ')
+                        # sms(phone, message)
+                        print(message)
+                        login(request, user)
+                        del request.session['phone']
+                        del request.session['verification_code']
+                        del request.session['time_added_code']
+                        return redirect('ordering:create_order')
     return render(request, 'forms/verify_code.html',)
 
 
@@ -183,6 +184,9 @@ def verify(request):
                 order.reference_id = reference_id
                 order.status = order.Status.PROCESSING
                 order.save()
+                payment_object = Payment.objects.create(payer=request.user, tracking_code=reference_id,
+                                                        price=order.get_final_cost(), order=order)
+                payment_object.save()
                 cart.clear()
                 return render(request, 'ordering/payment.html',
                               {"success": True, 'RefID': reference_id, "order_id": order.id})
@@ -203,4 +207,14 @@ def order_details(request, order_id):
     if order.buyer == request.user:
         return render(request, 'ordering/order_detail.html', {'order': order})
     else:
-        messages.error(request, 'این سفارش مربوط به یک کاربر دیگر میباشد!')
+        return render(request, 'ordering/not_your_order.html',)
+
+
+@login_required
+def download_order_pdf(request, order_id):
+    order = Order.objects.get(id=order_id)
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename="factor_of_order_{order.id}.pdf"'
+    response.write(render_to_pdf("pdf/order_factor.html", {'order': order},
+                                 'ordering/templates/pdf/pdf_style.css'))
+    return response
