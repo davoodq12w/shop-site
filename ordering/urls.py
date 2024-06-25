@@ -12,4 +12,5 @@ urlpatterns = [
     path('request/', views.send_request, name='request'),
     path('verify/', views.verify, name='verify'),
     path('order_details/<int:order_id>', views.order_details, name='order_details'),
+    path('download_order_pdf/<int:order_id>', views.download_order_pdf, name='download_order_pdf'),
 ]

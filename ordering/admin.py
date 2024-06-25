@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Order, OrderItem
+from .models import Order, OrderItem, Payment
 import openpyxl
 from django.http import HttpResponse
 import csv
@@ -65,4 +65,10 @@ class OrderAdmin(admin.ModelAdmin):
                     'paid', 'created', 'updated']
     list_filter = ['paid', 'created', 'updated']
     inlines = [OrderItemInline]
+    actions = [export_excel, export_csv]
+
+
+@admin.register(Payment)
+class PaymentAdmin(admin.ModelAdmin):
+    list_display = ['tracking_code', 'price', 'created',]
     actions = [export_excel, export_csv]

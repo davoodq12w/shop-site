@@ -8,7 +8,8 @@
 
     <form class="user-form" method="post">
         {% csrf_token %}
-        <input type="text" name="code" placeholder="کد پنج رقمی را وارد کنید" style="margin-bottom: 10px;">
+        <label for="code">کد تایید: </label>
+        <input type="text" name="code" placeholder="کد پنج رقمی را وارد کنید" style="margin-bottom: 10px;" id="code">
         <input type="submit" value="تایید کد" class="user-submit">
     </form>
     <div class="timer">

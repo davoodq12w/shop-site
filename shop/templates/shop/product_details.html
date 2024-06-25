@@ -3,6 +3,8 @@
 {% load jformat %}
 {% block title %}Product Details{% endblock %}
 {% block body %}
+{% load static %}
+{% load social_share %}
 <div class="details">
 {#title#}
 {#================================#}
@@ -57,6 +59,33 @@
                     <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" />
                     </svg>
                 </div>
+                {# share product #}
+                {# ================================#}
+                <p class="share-product">اشتراک گذاری</p>
+                <div class="share-buttons" hidden>
+                    <div class="copy-in-clipboard">
+                        <a id="copy">کپی کردن</a>
+                        <img src="{% static 'images/copy_icon.png' %}" alt="copy-icon">
+                    </div>
+                    <div>
+                        {% post_to_telegram product.name url 'تلگرام' 'share-to-telegram' %}
+                        <img src="{% static 'images/telegram.png' %}" alt="telegram-icon">
+                    </div>
+                    <div>
+                        {% post_to_facebook  url 'فیسبوک' 'share-to-facebook' %}
+                        <img src="{% static 'images/facebook.png' %}" alt="facebook-icon">
+                    </div>
+                    <div>
+                        {% post_to_twitter product.name url  "توییتر" 'share-to-twitter' %}
+                        <img src="{% static 'images/twitter.png' %}" alt="twitter-icon">
+                    </div>
+                    <div>
+                        {% post_to_whatsapp  url "واتساپ" 'share-to-whatsapp' %}
+                        <img src="{% static 'images/WhatsApp.png' %}" alt="whatsapp-icon">
+                    </div>
+                </div>
+                {# ================================#}
+
             </div>
         </div>
         {#add comment#}
@@ -137,8 +166,10 @@
     {% endfor %}
     </div>
 </div>
-{#================================#}
 
+
+
+{#================================#}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script>
     $(document).ready(function(){
@@ -255,6 +286,18 @@
                 });
             }
         });
+
+        $('#copy').click(function(){
+            let href = String(location.href);
+            if(window.navigator.clipboard){
+                navigator.clipboard.writeText(href);
+                alert("the link was copied");
+            }
+        });
+
+        $('.share-product').click(function(){
+            $('.share-buttons').toggle('hidden')
+        })
 
         {#chat GPT function #}
         function intcomma(number){

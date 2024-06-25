@@ -1,8 +1,13 @@
-{% extends 'account/profile.html' %}
-{% block title %} Order Detail {% endblock %}
 {% load jformat %}
 {% load humanize %}
-{% block profileContent %}
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> shop | Factor Order</title>
+</head>
+<body>
     <div class="order-detail-body">
         <div class="order-info">
             <h5>تاریخ سفارش : {{ order.created|jformat:'%Y/%m/%d - %H:%M' }}</h5>
@@ -13,19 +18,13 @@
             <h5 class="payment-status">
                 {% if  order.paid %}
                     <span>پرداخت شده</span>
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="true">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-                    </svg>
                 {% else %}
                     <span>پرداخت نشده</span>
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="false">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-                    </svg>
                 {% endif %}
             </h5>
         </div>
         <div class="order-details-address-users-info">
-            <div >
+            <div>
                 <p>اسم خریدار: {{ order.buyer.first_name }} {{ order.buyer.last_name }}</p>
                 <p>شماره تلفن خریدار: {{ order.buyer.phone }}</p>
                 <p>اسم گیرنده: {{ order.name }}</p>
@@ -43,7 +42,6 @@
         <div class="order-detail-items">
             {% for item in order.items.all %}
                 <div class="order-detail-item">
-                    <img src="{{ item.product.images.first.file.url }}" alt="{{ item.product.images.first.title }}">
                     <p>{{ item.product.name }}</p>
                     <p>قیمت هر واحد: {{ item.price|intcomma }}</p>
                     <p>تعداد: {{ item.quantity }}</p>
@@ -56,7 +54,7 @@
             <p>هزینه ی پست: {{ order.get_post_cost|intcomma }}</p>
             <p>جمع قیمت کالا ها: {{ order.get_total_cost|intcomma }}</p>
             <h3>هزینه ی کل سفارش: {{ order.get_final_cost|intcomma }}</h3>
-            <a href="{% url 'ordering:download_order_pdf' order.id %}">چاپ فاکتور</a>
         </div>
     </div>
-{% endblock %}
+</body>
+</html>

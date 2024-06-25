@@ -407,6 +407,8 @@ svg{
     color: #ccd0cf;
     gap: 10px;
     align-items: center;
+    width: 90%;
+    margin: 0 auto;
 }
 .add-to-cart{
     border-radius: 5px;
@@ -442,9 +444,9 @@ svg{
         border: 2px solid #ccd0cf;
         border-radius: 12px;
         padding: 10px;
-        width: 100px;
+        width: 150px;
         text-align: center;
-        margin-right:30px ;
+        margin-right:5px ;
         position: absolute;
         background-color: #06141B;
     }
@@ -707,7 +709,7 @@ svg{
 }
 
 
-.save-button{
+.save-button, .share-product{
     width: 20%;
     background-color: #9ba8ab;
     color: #11212d;
@@ -1409,6 +1411,15 @@ svg{
         justify-content: space-around;
         align-items: center;
         color: #ccd0cf;
+        & a{
+            color: black;
+            background-color: #ccd0cf;
+            border-radius: 5px;
+            padding: 5px 10px;
+            &:hover{
+                background-color: #4A5C6A;
+            }
+        }
     }
 }
 
@@ -1426,5 +1437,34 @@ svg{
         margin: 0 auto;
         text-align: center;
         width: 90px;
+    }
+}
+.share-buttons {
+    position: absolute;
+    background-color: #1d2c3b;
+    border-radius: 8px;
+    border: #ccd0cf 2px solid;
+    width: 150px;
+    padding: 15px;
+    left: 445px;
+    top: 420px;
+    & img {
+        width: 30px;
+    }
+
+    & div {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 120px;
+        height: 40px;
+        margin: 10px auto;
+        transition: all 200ms ease;
+        & a{
+            color: #ccd0cf;
+        }
+        &:hover{
+            font-size: 18px;
+        }
     }
 }

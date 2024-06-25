@@ -68,3 +68,20 @@ class OrderItem(models.Model):
 
     def get_weight(self):
         return self.quantity * self.weight
+
+
+class Payment(models.Model):
+    tracking_code = models.CharField()
+    payer = models.ForeignKey(ShopUser, related_name='payments', on_delete=models.SET_NULL, null=True, blank=True)
+    price = models.IntegerField()
+    created = jmodels.jDateTimeField(auto_now_add=True)
+    order = models.OneToOneField(Order, related_name='payment', on_delete=models.SET_NULL, null=True, blank=True)
+
+    class Meta:
+        ordering = ['-created']
+        indexes = [
+            models.Index(fields=['-created'])
+        ]
+
+    def __str__(self):
+        return f"tracking_code: {self.tracking_code}"

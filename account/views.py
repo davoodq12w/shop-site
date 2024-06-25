@@ -1,30 +1,78 @@
+import random
+from django.utils import timezone
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.core.mail import send_mail
+from django.utils.dateparse import parse_datetime
 from django.views.decorators.http import require_POST
 from .models import *
 from .forms import *
 # Create your views here.
+
+def verify_phone(request):
+    if request.method == 'POST':
+        form = VerifyPhoneForm(request.POST)
+        if form.is_valid():
+
+            phone = form.cleaned_data['phone']
+            tokens = {'token': ''.join(random.choices('1234567890',k=5))}
+
+            request.session['verification_code'] = tokens['token']
+            request.session['phone'] = phone
+            request.session['time_added_code'] = str(timezone.now())
+
+            # verification(phone, tokens, 'verification')
+            print(tokens)
+            return redirect('account:verify_code')
+    else:
+        form = VerifyPhoneForm()
+    return render(request, 'forms/verify_phone.html', {'form': form})
+
+
+def verify_code(request):
+    if request.method == 'POST':
+        code = request.POST.get('code')
+
+        if code:
+
+            if "time_added_code" in request.session:
+                code_time_str = request.session["time_added_code"]
+                code_time = parse_datetime(code_time_str)
+                time_different = (timezone.now() - code_time).total_seconds()
+
+                if time_different > 120:
+                    del request.session['verification_code']
+                    return redirect('account:verify_code')
+
+                else:
+                    verification_code = request.session['verification_code']
+                    if code == verification_code:
+                        del request.session['verification_code']
+                        return redirect('account:create_user')
+
+    return render(request, 'forms/verify_code.html',)
 
 
 def create_user(request):
     if request.method == 'POST':
         form = ShopUserCreationForm(data=request.POST)
         if form.is_valid():
-            cd = form.cleaned_data
-            user = ShopUser.objects.create(phone=cd['phone'])
-            user.set_password(cd['password1'])
-            user.first_name = cd['first_name']
-            user.last_name = cd['last_name']
-            user.save()
-            user = authenticate(request, phone=cd['phone'], password=cd['password1'])
-            if user is not None:
-                login(request, user)
-                return redirect('shop:product_list')
-            else:
-                raise ValueError('user is not exist')
+            if 'phone' in  request.session:
+                phone = request.session['phone']
+                cd = form.cleaned_data
+                user = ShopUser.objects.create(phone=phone)
+                user.set_password(cd['password1'])
+                user.first_name = cd['first_name']
+                user.last_name = cd['last_name']
+                user.save()
+                user = authenticate(request, phone=phone, password=cd['password1'])
+                if user is not None:
+                    login(request, user)
+                    return redirect('shop:product_list')
+                else:
+                    raise ValueError('user is not exist')
     else:
         form = ShopUserCreationForm()
     return render(request, 'forms/create_user.html', {'form': form})
