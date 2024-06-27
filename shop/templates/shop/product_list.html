@@ -19,6 +19,17 @@
     <div class="options-buttons">
         <p class="categories-button">دسته بندی ها</p>
         <p class="product-ordering-button">مرتب سازی بر اساس: <span>{{ ordering_by }}</span></p>
+        <div class="price-filter">
+            <p>بازه ی قیمتی : </p>
+            <select id="price-filter" >
+                <option value="all">همه</option>
+                <option value="100000"> تا 100,000 </option>
+                <option value="200000"> تا 200,000</option>
+                <option value="500000"> تا 500,000</option>
+                <option value="700000"> تا 700,000</option>
+                <option value="1000000"> تا 1,000,000</option>
+            </select>
+        </div>
     </div>
     <div class="options">
         <div class="categories" hidden >
@@ -48,6 +59,7 @@
                 </ul>
             {% endif %}
         </div>
+
     </div>
 {#=======================================#}
 
@@ -104,10 +116,35 @@
         $('.categories-button').click(function (){
             $('.categories').toggle('hidden');
         });
+
         $('.product-ordering-button').click(function (){
             $('.product-ordering').toggle('hidden');
         });
 
+        $('#price-filter').change(function () {
+            var price = $(this).val();
+            var products = $('.products');
+            var url =   {% if category %}
+                            {% if ordering_slug %}
+                                "{% url 'shop:product_ordering_by_category' ordering_slug=ordering_slug category_slug=category.slug %}"
+                            {% else %}
+                                "{% url 'shop:product_by_category' category.slug %}"
+                            {% endif %}
+                        {% elif ordering_slug %}
+                            "{% url 'shop:product_ordering' ordering_slug %}"
+                        {% else %}
+                            "{% url 'shop:product_list' %}"
+                        {% endif %}
+
+            $.ajax({
+                type:'POST',
+                url: url,
+                data: {'price': price, 'csrfmiddlewaretoken': '{{ csrf_token }}' },
+                success: function (data){
+                    products.html(data);
+                },
+            });
+        });
     });
 </script>
 {% endblock %}

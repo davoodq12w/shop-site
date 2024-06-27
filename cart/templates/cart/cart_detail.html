@@ -58,9 +58,9 @@
         <div class="for-cart-button"></div>
         <div class="cart-button">
             <div class="cart-continue">
-            <p class="cart-final-price">مبلغ قابل پرداخت: <span id="cart-final-price">{{ cart.get_final_price|intcomma }}</span></p>
-            <p class="cart-product-count-in-cart">تعداد کل محصولات: <span id="cart-product-count-in-cart">{{ cart|length }}</span></p>
-            <a class="cart-continue-shopping" href="{% url 'ordering:verify_phone' %}">ادامه ی خرید</a>
+                <p class="cart-final-price">مبلغ قابل پرداخت: <span id="cart-final-price">{{ cart.get_final_price|intcomma }}</span></p>
+                <p class="cart-product-count-in-cart">تعداد کل محصولات: <span id="cart-product-count-in-cart">{{ cart|length }}</span></p>
+                <a class="cart-continue-shopping" {% if not empty_cart %}href="{% url 'ordering:verify_phone' %}"{% else %}id="empty-cart" {% endif %}>ادامه ی خرید</a>
             </div>
         </div>
     </div>
@@ -117,10 +117,15 @@
                     }
                 });
         }
+
+        $('#empty-cart').click(function (){
+            alert("سبد خرید خالی است!")
+        });
         {#chat GPT function #}
         function intcomma(number){
             return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
         }
+
         {#chat GPT function #}
     });
 </script>

@@ -547,7 +547,7 @@ svg{
         width: 19%;
         height: 80%;
         font-family: 'vazir-medium';
-        background-color: #11212d;
+        background-color: #06141B;
         border-radius: 5px;
         border: none;
         color: #ccd0cf;
@@ -1465,6 +1465,31 @@ svg{
         }
         &:hover{
             font-size: 18px;
+        }
+    }
+}
+
+.price-filter{
+    display: flex;
+    background-color: #06141B;
+    align-items: center;
+    height: 40px;
+    border-radius: 5px;
+    width: 230px;
+    justify-content: center;
+    gap: 10px;
+    & select {
+        font-family: vazir-medium;
+        width: 100px;
+        border-radius: 5px;
+        height: 30px;
+        line-height: 30px;
+        text-align: center;
+        color: #06141B;
+        background-color: #ccd0cf;
+        border: none;
+        &:focus-visible {
+            outline: none;
         }
     }
 }

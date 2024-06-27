@@ -19,6 +19,6 @@ def status_sender(sender, instance, **kwargs):
         message = "مشترک گرامی رسیدن بسته به شما تایید شد امید وارم از سفارشتون راضی باشید"
     elif order_status == 'Rejected':
         message = "مشترک گرامی مرجوعیت شما با موفقیت انجام شد با تشکر "
-
-    # sms(phone, message)
-    print(f'{phone}\n {message}')
+    if message:
+        # sms(phone, message)
+        print(f'{phone}\n {message}')
