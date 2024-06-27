@@ -8,6 +8,7 @@ from django.views.decorators.http import require_POST
 from .models import *
 from .forms import *
 
+
 # Create your views here.
 
 
@@ -43,10 +44,16 @@ def product_list(request, ordering_slug=None, category_slug=None):
     if category_slug:
         category = get_object_or_404(Category, slug=category_slug)
         products = Product.objects.filter(category=category)
-        if ordering_slug:
-            products = ordering_products(products, ordering_slug)
+
     if ordering_slug:
         products = ordering_products(products, ordering_slug)
+
+    if request.headers.get('x-requested-with') == "XMLHttpRequest":
+        price = request.POST.get('price')
+        if price.isdigit():
+            products = products.filter(discount_price__lt=int(price))
+
+        return render(request, 'ajax/products.html', {"products": products})
 
     paginator = Paginator(products, 30)
     page_number = request.GET.get('page', 1)
@@ -57,6 +64,7 @@ def product_list(request, ordering_slug=None, category_slug=None):
         'categories': categories,
         'products': products,
         'ordering_by': ordering(ordering_slug),
+        'ordering_slug': ordering_slug,
     }
     return render(request, 'shop/product_list.html', context)
 
@@ -81,7 +89,8 @@ def search(request):
         if form.is_valid():
             query = form.cleaned_data['query']
             result1 = Product.objects.annotate(similarity=TrigramSimilarity('name', query)).filter(similarity__gt=0.1)
-            result2 = Product.objects.annotate(similarity=TrigramSimilarity('description', query)).filter(similarity__gt=0.1)
+            result2 = Product.objects.annotate(similarity=TrigramSimilarity('description', query)).filter(
+                similarity__gt=0.1)
             result3 = Product.objects.annotate(similarity=TrigramSimilarity('slug', query)).filter(similarity__gt=0.1)
             results = (result1 | result2 | result3).order_by("-similarity")
     context = {

@@ -8,6 +8,7 @@ from account.models import ShopUser
 class Order(models.Model):
 
     class Status(models.TextChoices):
+        NONE = ('None', 'خالی')
         PROCESSING = ('Processing', ' در حال پردازش ')
         SENDING = ('Sending', 'درحال ارسال')
         RECEIVED = ('Received', 'دریافت شده')
@@ -24,7 +25,7 @@ class Order(models.Model):
     updated = jmodels.jDateTimeField(auto_now=True)
     paid = models.BooleanField(default=False)
     reference_id = models.CharField(null=True, blank=True)
-    status = models.CharField(choices=Status.choices)
+    status = models.CharField(choices=Status.choices,default=Status.NONE)
 
     def __str__(self):
         return f"order by id {self.id}"

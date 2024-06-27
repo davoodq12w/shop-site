@@ -23,7 +23,15 @@ def add_to_cart(request, product_id):
 
 def cart_detail(request):
     cart = Cart(request)
-    return render(request, 'cart/cart_detail.html', {'cart': cart})
+    empty_cart = False
+    if request.session['cart'] == {} or request.session['cart'] is None:
+        empty_cart = True
+
+    context = {
+        'cart': cart,
+        'empty_cart': empty_cart,
+    }
+    return render(request, 'cart/cart_detail.html', context)
 
 
 @require_POST

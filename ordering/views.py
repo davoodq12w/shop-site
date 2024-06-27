@@ -87,10 +87,12 @@ def create_order(request):
             order = form.save(commit=False)
             order.buyer = request.user
             order.save()
+
             for item in cart:
                 OrderItem.objects.create(order=order, product=item['product'], quantity=item['quantity'],
                                          price=item['price'], weight=item['weight'])
-                request.session['order_id'] = order.id
+
+            request.session['order_id'] = order.id
             return redirect('ordering:request')
     else:
         form = CreatOrderForm(request=request)
@@ -128,7 +130,8 @@ CallbackURL = 'http://127.0.0.1:8000/ordering/verify/'
 
 
 def send_request(request):
-    order = Order.objects.get(id=request.session['order_id'])
+    order_id = request.session['order_id']
+    order = Order.objects.get(id=order_id)
     description = ""
     for item in order.items.all():
         description += item.product.name + " , "
