@@ -21,6 +21,7 @@ urlpatterns = [
     path('orders_status/<slug:status>/', views.orders_status, name='orders_status'),
     path('verify_phone/', views.verify_phone, name='verify_phone'),
     path('verify_code/', views.verify_code, name='verify_code'),
+    path('reject_list/', views.reject_list, name='reject_list'),
     # =====================================
     # for password reset
     # =====================================

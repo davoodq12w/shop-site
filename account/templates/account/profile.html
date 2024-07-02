@@ -16,7 +16,7 @@
                 <li><a href="{% url 'account:orders_status' status='Processing' %}"> درحال پردازش </a></li>
                 <li><a href="{% url 'account:orders_status' status='Sending' %}"> درحال ارسال </a></li>
                 <li><a href="{% url 'account:orders_status' status='Received' %}"> دریافت شده </a></li>
-                <li><a href="{% url 'account:orders_status' status='rejected' %}"> مرجوع ها </a></li>
+                <li><a href="{% url 'account:reject_list' %}"> مرجوع ها </a></li>
             </ul>
         </div>
         <div class="profile-content">
