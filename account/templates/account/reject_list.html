@@ -1,0 +1,50 @@
+{% extends 'account/profile.html' %}
+{% load humanize %}
+{% block profileContent %}
+    <p style="color: #ccd0cf; text-align: center"><span style="color: darkred"> توجه: </span>برای درخواست ارجاع به جزییات محصولی که میخواهید ارجاع کنید مراجعه کنید و سپس از طریق دکمه ی " ارجاع کالا " فرم را پر کنید.</p>
+    <div>
+        <table class="orders-table">
+            <tr class="table-titles">
+                <th>جزییات ارجاع</th>
+                <th>شماره ی ارجاع</th>
+                <th>اسم کالا</th>
+                <th>تعداد کالاها</th>
+                <th>قیمت قابل برگشت</th>
+                <th>توضیحات ارجاع</th>
+                <th>وضعیت ارجاع</th>
+            </tr>
+            {% for item in rejects %}
+                <tr class="order-contents">
+                    <td>
+                        <a href="{% url 'ordering:reject_details' item.id%}">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="m11.25 11.25.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z" />
+                            </svg>
+                            <span>جزئیات </span>
+                        </a>
+                    </td>
+                    <td> {{ item.id }}</td>
+                    <td> {{ item.product.name }}</td>
+                    <td> {{ item.quantity }}</td>
+                    <td> {{ item.get_total_cost|intcomma }} تومان</td>
+                    <td> {{ item.description|truncatechars:40 }}</td>
+                    <td class="payment-status">
+                        {% if item.verify %}
+                            <span>تایید شده</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                            </svg>
+                        {% else %}
+                            <span>تایید نشده</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="false">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                            </svg>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% empty %}
+                <p>ارجاعی وجود ندارد</p>
+            {% endfor %}
+        </table>
+    </div>
+{% endblock %}

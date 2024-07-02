@@ -8,6 +8,7 @@ from django.core.mail import send_mail
 from django.utils.dateparse import parse_datetime
 from django.views.decorators.http import require_POST
 from .models import *
+from ordering.models import Reject
 from .forms import *
 # Create your views here.
 
@@ -249,8 +250,12 @@ def orders_status(request, status):
         orders = user.orders.filter(status='Sending')
     elif status == 'Received':
         orders = user.orders.filter(status='Received')
-    elif status == 'rejected':
-        orders = user.orders.filter(status='Rejected')
     else:
         orders = user.orders.all()
     return render(request, 'account/order_status.html', {'orders': orders})
+
+
+def reject_list(request):
+    user = request.user
+    rejects = Reject.objects.filter(rejecter=user)
+    return render(request, 'account/reject_list.html', {'rejects': rejects})

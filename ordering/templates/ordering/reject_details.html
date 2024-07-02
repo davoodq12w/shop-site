@@ -1,0 +1,46 @@
+{% extends 'account/profile.html' %}
+{% load humanize %}
+{% load jformat %}
+{% block profileContent %}
+    <div class="reject-detail-container">
+
+        <div class="reject-detail-header">
+            <div class="reject-detail-status">
+                <span>وضعیت تایید:</span>
+                {% if reject_item.verify %}
+                    <span>تایید شده</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                    </svg>
+                {% else %}
+                    <span>تایید نشده</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="false">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                    </svg>
+                {% endif %}
+            </div>
+            <p>شماره ارجاع: {{ reject_item.id }}</p>
+            <p>تاریخ درخواست ارجاع: {{ reject_item.created|jformat:'%Y/%m/%d - %H:%M' }}</p>
+        </div>
+
+        <div class="reject-detail-body">
+            <p>نام ارجاع کننده: {{ reject_item.rejecter.first_name }} {{ reject_item.rejecter.last_name }}</p>
+            <p>شماره تماس ارجاع کننده: {{ reject_item.rejecter.phone }}</p>
+            <p> اسم کالای ارجاعی: {{ reject_item.product.name }}</p>
+            <p> تعداد کالای ارجاعی: {{ reject_item.quantity }}</p>
+            <p>قیمت هر واحد از کالا: {{ reject_item.product.discount_price|intcomma }}</p>
+            <p> قیمت قابل برگشت: {{ reject_item.get_total_cost|intcomma }}</p>
+        </div>
+
+        <h2>توضیحات</h2>
+        <p class="reject-detail-description">{{ reject_item.description }}</p>
+
+        <h2>عکس های کالای ارجاعی</h2>
+        <div class="reject-detail-images">
+            {% for image in reject_item.images.all %}
+                <img src="{{ image.file.url }}" alt="{{ reject_item.product.name }} image">
+            {% endfor %}
+        </div>
+
+    </div>
+{% endblock %}

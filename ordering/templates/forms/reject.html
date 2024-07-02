@@ -1,0 +1,50 @@
+{% extends 'parents/base_template.html' %}
+{% block title %} Reject product{% endblock %}
+{% block body %}
+    <form class="reject-form" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <label for="images" class="images-label">
+            <span>انتخاب عکس</span>
+
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 10.5v6m3-3H9m4.06-7.19-2.12-2.12a1.5 1.5 0 0 0-1.061-.44H4.5A2.25 2.25 0 0 0 2.25 6v12a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 18V9a2.25 2.25 0 0 0-2.25-2.25h-5.379a1.5 1.5 0 0 1-1.06-.44Z" />
+            </svg>
+
+        </label>
+        <input type="file" name="images" id="images" multiple required  accept="image/*">
+
+        <div class="images">
+            <p>هنوز عکس انتخاب نکرده اید لطفا یک یا چند فایل انتخاب کنید.</p>
+        </div>
+        {{ texts_form.as_p }}
+        <input type="submit" class="user-submit" value="ثبت درخواست">
+    </form>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+    $(document).ready(function(){
+        $('#images').on('change', function(e){
+        var files = e.target.files;
+        var len = files.length
+        $('.images').empty();
+
+        if(len > 3 ){
+            alert('تعداد عکس ها نباید از 3 عدد بیشتر باشد.');
+            len = 3;
+        }
+        for(var i=0; i<len; i++){
+            if (files[i].size < 5242880) {
+                var reader = new FileReader();
+                reader.onload = function(e){
+                    $('.images').append('<img src="' + e.target.result + '">');
+                }
+                reader.readAsDataURL(files[i]);
+            } else {
+                alert('عکس ' + files[i].name + ' بزرگتر از 5 مگابایت است و نمایش داده نخواهد شد.');
+            }
+        }
+    });
+
+    });
+</script>
+{% endblock %}

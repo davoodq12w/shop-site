@@ -91,7 +91,7 @@ def create_order(request):
             for item in cart:
                 OrderItem.objects.create(order=order, product=item['product'], quantity=item['quantity'],
                                          price=item['price'], weight=item['weight'])
-
+            cart.clear()
             request.session['order_id'] = order.id
             return redirect('ordering:request')
     else:
@@ -129,8 +129,12 @@ ZP_API_STARTPAY = f"https://{sandbox}.zarinpal.com/pg/StartPay/"
 CallbackURL = 'http://127.0.0.1:8000/ordering/verify/'
 
 
-def send_request(request):
-    order_id = request.session['order_id']
+def send_request(request, id=None):
+    if id:
+        order_id = id
+    else:
+        order_id = request.session['order_id']
+
     order = Order.objects.get(id=order_id)
     description = ""
     for item in order.items.all():
@@ -190,7 +194,6 @@ def verify(request):
                 payment_object = Payment.objects.create(payer=request.user, tracking_code=reference_id,
                                                         price=order.get_final_cost(), order=order)
                 payment_object.save()
-                cart.clear()
                 return render(request, 'ordering/payment.html',
                               {"success": True, 'RefID': reference_id, "order_id": order.id})
             else:
@@ -221,3 +224,39 @@ def download_order_pdf(request, order_id):
     response.write(render_to_pdf("pdf/order_factor.html", {'order': order},
                                  'ordering/templates/pdf/pdf_style.css'))
     return response
+
+
+@login_required
+def reject_product(request, product_id=None):
+    user = request.user
+    product = Product.objects.get(id=product_id)
+
+    if request.method == 'POST':
+        texts_form = RejectForm(data=request.POST)
+
+        if texts_form.is_valid():
+            rejected_product = texts_form.save(commit=False)
+            rejected_product.rejecter = user
+            rejected_product.product = product
+            rejected_product.save()
+            for image in request.FILES.getlist('images'):
+                Image.objects.create(rejected_product=rejected_product, file=image)
+            rejected_product.save()
+            return redirect('account:orders_status', 'rejected')
+
+    else:
+        texts_form = RejectForm()
+        context = {
+            'texts_form': texts_form,
+        }
+    return render(request, 'forms/reject.html', context)
+
+
+@login_required
+def reject_details(request, reject_id):
+    user = request.user
+    reject_item = get_object_or_404(Reject,id=reject_id)
+    if user == reject_item.rejecter:
+        return render(request, 'ordering/reject_details.html', {'reject_item': reject_item})
+    else:
+        return render(request, 'ordering/reject_details.html', {'reject_item': None})

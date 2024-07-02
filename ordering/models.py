@@ -1,4 +1,6 @@
 from django.db import models
+from django_resized import ResizedImageField
+
 from shop.models import Product
 from django_jalali.db import models as jmodels
 from account.models import ShopUser
@@ -12,7 +14,6 @@ class Order(models.Model):
         PROCESSING = ('Processing', ' در حال پردازش ')
         SENDING = ('Sending', 'درحال ارسال')
         RECEIVED = ('Received', 'دریافت شده')
-        REJECTED = ('Rejected', 'مرجوع')
 
     buyer = models.ForeignKey(ShopUser, related_name='orders', on_delete=models.CASCADE)
     name = models.CharField(max_length=50)
@@ -25,7 +26,7 @@ class Order(models.Model):
     updated = jmodels.jDateTimeField(auto_now=True)
     paid = models.BooleanField(default=False)
     reference_id = models.CharField(null=True, blank=True)
-    status = models.CharField(choices=Status.choices,default=Status.NONE)
+    status = models.CharField(choices=Status.choices, default=Status.NONE)
 
     def __str__(self):
         return f"order by id {self.id}"
@@ -86,3 +87,39 @@ class Payment(models.Model):
 
     def __str__(self):
         return f"tracking_code: {self.tracking_code}"
+
+
+class Reject(models.Model):
+    product = models.ForeignKey(Product, related_name='rejects', on_delete=models.CASCADE)
+    quantity = models.IntegerField()
+    rejecter = models.ForeignKey(ShopUser, related_name='rejects', on_delete=models.CASCADE)
+    description = models.TextField(max_length=1000)
+    verify = models.BooleanField(default=False)
+    created = jmodels.jDateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-created']
+        indexes = [
+            models.Index(fields=['-created'])
+        ]
+
+    def __str__(self):
+        return f'{self.product} مرجوع شد توسط {self.rejecter}'
+
+    def get_total_cost(self):
+        return self.product.discount_price * self.quantity
+
+def image_sorter(instance, filename):
+    return f"rejected_product_images/{instance.created.year}/{instance.created.month}/{instance.created.day}/{filename}"
+
+
+class Image(models.Model):
+    rejected_product = models.ForeignKey(Reject, related_name='images', on_delete=models.CASCADE)
+    created = jmodels.jDateTimeField(auto_now_add=True)
+    file = ResizedImageField(upload_to=image_sorter)
+
+    class Meta:
+        ordering = ['-created']
+        indexes = [
+            models.Index(fields=['-created']),
+        ]

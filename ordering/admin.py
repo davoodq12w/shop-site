@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Order, OrderItem, Payment
+from .models import *
 import openpyxl
 from django.http import HttpResponse
 import csv
@@ -72,3 +72,15 @@ class OrderAdmin(admin.ModelAdmin):
 class PaymentAdmin(admin.ModelAdmin):
     list_display = ['tracking_code', 'price', 'created',]
     actions = [export_excel, export_csv]
+
+
+class ImageInline(admin.TabularInline):
+    model = Image
+    extra = 0
+
+
+@admin.register(Reject)
+class RejectAdmin(admin.ModelAdmin):
+    list_display = ['rejecter', 'product', 'quantity', 'verify']
+    list_filter = ['verify', 'created']
+    inlines = [ImageInline]

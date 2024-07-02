@@ -1,6 +1,6 @@
 from django import forms
 from account.models import ShopUser
-from .models import Order
+from .models import Order, Reject
 from account.models import Address
 
 
@@ -31,6 +31,7 @@ class CreatOrderForm(forms.ModelForm):
     def __init__(self, request, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.request = request
+
     class Meta:
         model = Order
         fields = ('name', 'phone', 'province', 'city', 'postal_code', 'address')
@@ -84,3 +85,20 @@ class CreatOrderForm(forms.ModelForm):
             forms.ValidationError('شماره تلفن باید با 09 شروع شود')
 
         return phone
+
+
+class RejectForm(forms.ModelForm):
+
+    class Meta:
+        model = Reject
+        fields = ['quantity', 'description']
+        widgets = {
+            'quantity': forms.NumberInput(attrs={'class': 'quantity-of-reject-input', 'value': '1'},),
+            'description': forms.Textarea(attrs={'class': 'description-of-reject-input'})
+        }
+        labels = {
+            'quantity': "تعداد کالاهای ارجاعی",
+            'description': "توضیحات دلیل ارجاع"
+        }
+
+
