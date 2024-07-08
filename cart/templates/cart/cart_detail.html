@@ -61,8 +61,8 @@
                 <p class="cart-final-price">مبلغ قابل پرداخت: <span id="cart-final-price">{{ cart.get_final_price|intcomma }}</span></p>
                 <p class="cart-product-count-in-cart">تعداد کل محصولات: <span id="cart-product-count-in-cart">{{ cart|length }}</span></p>
                 <a class="cart-continue-shopping" {% if not empty_cart %}href="{% url 'ordering:verify_phone' %}"{% else %}id="empty-cart" {% endif %}>ادامه ی خرید</a>
-            </div>
         </div>
+            </div>
     </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script>

@@ -42,40 +42,50 @@ def verify_phone(request):
 
 def verify_code(request):
     if request.method == 'POST':
-        code = request.POST.get('code')
+        try:
+            code = request.POST.get('code')
 
-        if code:
+            if code:
 
-            if "time_added_code" in request.session:
-                code_time_str = request.session["time_added_code"]
-                code_time = parse_datetime(code_time_str)
-                time_different = (timezone.now() - code_time).total_seconds()
+                if "time_added_code" in request.session:
+                    code_time_str = request.session["time_added_code"]
+                    code_time = parse_datetime(code_time_str)
+                    time_different = (timezone.now() - code_time).total_seconds()
 
-                if time_different > 120:
-                    del request.session['verification_code']
-                    return redirect('ordering:verify_phone')
-
-                else:
-                    verification_code = request.session['verification_code']
-                    phone = request.session['phone']
-                    if code == verification_code:
-                        user = ShopUser.objects.create(phone=phone)
-                        password = f'{phone}shopsite'
-                        user.set_password(password)
-                        user.save()
-
-                        message = (f'کاربر عزیز به سایت فروشگاهی خوش آمدید'
-                                   f'جزییات حساب کاربری شما:'
-                                   f'{phone}شماره تلفن : '
-                                   f'{password}رمز شما: ')
-                        # sms(phone, message)
-                        print(message)
-                        login(request, user)
-                        del request.session['phone']
+                    if time_different > 120:
                         del request.session['verification_code']
-                        del request.session['time_added_code']
-                        return redirect('ordering:create_order')
-    return render(request, 'forms/verify_code.html',)
+                        return redirect('ordering:verify_phone')
+
+                    else:
+                        verification_code = request.session['verification_code']
+                        phone = request.session['phone']
+                        if code == verification_code:
+                            user = ShopUser.objects.create(phone=phone)
+                            password = f'{phone}shopsite'
+                            user.set_password(password)
+                            user.save()
+
+                            message = (f'کاربر عزیز به سایت فروشگاهی خوش آمدید'
+                                       f'جزییات حساب کاربری شما:'
+                                       f'{phone}شماره تلفن : '
+                                       f'{password}رمز شما: ')
+                            # sms(phone, message)
+                            print(message)
+                            login(request, user)
+                            del request.session['phone']
+                            del request.session['verification_code']
+                            del request.session['time_added_code']
+                            return redirect('ordering:create_order')
+                        else:
+                            messages.error(request, 'کد را اشتباه وارد کردید!')
+                            minute = 1 - (int(time_different) // 60)
+                            second = 60 - (int(time_different) % 60)
+        except:
+            return redirect('ordering:verify_phone')
+    else:
+        minute = 2
+        second = 0
+    return render(request, 'forms/verify_code.html',{'minute': minute,'second': second})
 
 
 @login_required

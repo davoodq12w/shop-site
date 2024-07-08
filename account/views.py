@@ -10,7 +10,9 @@ from django.views.decorators.http import require_POST
 from .models import *
 from ordering.models import Reject
 from .forms import *
+from django.contrib import messages
 # Create your views here.
+
 
 def verify_phone(request):
     if request.method == 'POST':
@@ -18,7 +20,7 @@ def verify_phone(request):
         if form.is_valid():
 
             phone = form.cleaned_data['phone']
-            tokens = {'token': ''.join(random.choices('1234567890',k=5))}
+            tokens = {'token': ''.join(random.choices('1234567890', k=5))}
 
             request.session['verification_code'] = tokens['token']
             request.session['phone'] = phone
@@ -34,33 +36,40 @@ def verify_phone(request):
 
 def verify_code(request):
     if request.method == 'POST':
-        code = request.POST.get('code')
+        try:
+            code = request.POST.get('code')
+            if code:
+                if "time_added_code" in request.session:
+                    code_time_str = request.session["time_added_code"]
+                    code_time = parse_datetime(code_time_str)
+                    time_different = (timezone.now() - code_time).total_seconds()
 
-        if code:
-
-            if "time_added_code" in request.session:
-                code_time_str = request.session["time_added_code"]
-                code_time = parse_datetime(code_time_str)
-                time_different = (timezone.now() - code_time).total_seconds()
-
-                if time_different > 120:
-                    del request.session['verification_code']
-                    return redirect('account:verify_code')
-
-                else:
-                    verification_code = request.session['verification_code']
-                    if code == verification_code:
+                    if time_different > 120:
                         del request.session['verification_code']
-                        return redirect('account:create_user')
+                        return redirect('account:verify_phone')
 
-    return render(request, 'forms/verify_code.html',)
+                    else:
+                        verification_code = request.session['verification_code']
+                        if code == verification_code:
+                            del request.session['verification_code']
+                            return redirect('account:create_user')
+                        else:
+                            messages.error(request,'کد را اشتباه وارد کردید!')
+                            minute = 1 - (int(time_different) // 60)
+                            second = 60 - (int(time_different) % 60)
+        except:
+            return redirect('account:verify_phone')
+    else:
+        minute = 2
+        second = 0
+    return render(request, 'forms/verify_code.html', {'minute': minute,'second': second})
 
 
 def create_user(request):
     if request.method == 'POST':
         form = ShopUserCreationForm(data=request.POST)
         if form.is_valid():
-            if 'phone' in  request.session:
+            if 'phone' in request.session:
                 phone = request.session['phone']
                 cd = form.cleaned_data
                 user = ShopUser.objects.create(phone=phone)
