@@ -94,7 +94,7 @@ class ShopUserChangeForm(UserChangeForm):
 
 
 class ShopLoginForm(forms.Form):
-    phone = forms.CharField(widget=forms.TextInput(attrs={'class': 'login-phone'}), required=True, label='شماره تلفن')
+    phone = forms.CharField(widget=forms.TextInput(attrs={'class': 'login-phone'}), required=True, label='شماره تلفن',max_length=11)
     password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'login-password'}), required=True,
                                label='رمز')
 

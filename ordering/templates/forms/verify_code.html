@@ -3,24 +3,25 @@
 {% block body %}
 
     {% for message in messages %}
-        <p>{{ messages }}</p>
+        <p style="text-align: center; color: darkred">{{ message }}</p>
     {% endfor %}
 
     <form class="user-form" method="post">
         {% csrf_token %}
         <label for="code">کد تایید: </label>
-        <input type="text" name="code" placeholder="کد پنج رقمی را وارد کنید" style="margin-bottom: 10px;" id="code">
+        <input type="text" name="code" placeholder="کد پنج رقمی را وارد کنید" style="margin-bottom: 10px;" id="code" maxlength="5">
         <input type="submit" value="تایید کد" class="user-submit">
     </form>
+
     <div class="timer">
-        <p id="again"> <span id="timer"> 2:00 </span> تا تلاش دوباره </p>
+        <p id="again"> <span id="timer"> {{ minute }}:{{ second }} </span> تا تلاش دوباره </p>
         <a href="{% url 'ordering:verify_phone' %}" hidden id="try-again">  تلاش دوباره  </a>
     </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script>
     $(document).ready(function(){
-        var minutes = 2;
-        var seconds = 0;
+        var minutes = {{ minute }};
+        var seconds = {{ second }};
         var timer = setInterval(function () {
             if ( minutes == 0 & seconds == 0) {
                 clearInterval(timer)
