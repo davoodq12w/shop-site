@@ -44,6 +44,7 @@
         {% if request.user.is_staff %}
         <a class="go-to-admin-page" href="http://127.0.0.1:8000/admin"> پنجره ی ادمین</a>
         {% endif %}
+        <a class="go-to-admin-page" href="{% url 'api:products_api' %}">api</a>
     </div>
     <form method="get" action="{% url 'shop:search' %}" class="search">
         <input type="text" placeholder="جستجوی کالا..." name="query" required class="search-box">
