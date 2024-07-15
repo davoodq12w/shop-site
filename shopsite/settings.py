@@ -42,11 +42,14 @@ INSTALLED_APPS = [
     "cart.apps.CartConfig",
     "ordering.apps.OrderingConfig",
     "account.apps.AccountConfig",
+    "api.apps.ApiConfig",
     'django_resized',
     'django_cleanup',
     'django_jalali',
     'django_social_share',
-
+    'rest_framework',
+    'drf_spectacular',
+    'rest_framework.authtoken'
 ]
 
 MIDDLEWARE = [
@@ -186,3 +189,25 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 # ================================================================
 MERCHANT = "00000000-0000-0000-0000-000000000000"
 SANDBOX = False
+# ================================================================
+#                       for rest_framework
+# ================================================================
+
+REST_FRAMEWORK = {
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+        ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ]
+}
+# ================================================================
+#                       for drf-spectacular
+# ================================================================
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Shop Site',
+    'DESCRIPTION': 'A Shop for CV',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
+}
