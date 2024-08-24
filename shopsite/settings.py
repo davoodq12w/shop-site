@@ -156,20 +156,9 @@ LOGIN_REDIRECT_URL = '/'
 # ================================================================
 AUTH_USER_MODEL = 'account.ShopUser'
 
-# ================================================================
-#                       for sending email
-# ================================================================
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'davodrashiworking@gmail.com'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_HOST_PASSWORD = 'kaemihmvchwijyyx'
-# send for email
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-# show in console
-# ----------------------------------------------------------------
-# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-# ----------------------------------------------------------------
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
 
 # ================================================================
 #                       for zarinpal
